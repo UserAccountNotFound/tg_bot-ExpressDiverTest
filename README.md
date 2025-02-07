@@ -4,11 +4,12 @@
 
 Попытка реализации единой точки входа в программы тестирования по курсам OWD и AOWD с последующей возможностью просмотра исторических данных, а также попытка шаблонизировать вывод результатов тестирования
 
+
 ## Запуск
 
 * клонируем нужную ветку и переходим в нее
 ``` bash
-git clone --single-branch -b main t https://github.com/UserAccountNotFound/tg_bot-diver-test.git /opt/tg_bot && cd /opt/tg_bot
+git clone --single-branch -b dev t https://github.com/UserAccountNotFound/tg_bot-diver-test.git /opt/tgBot-EDT && cd /opt/tgBot-EDT
 ```
 
 * создаем виртуальное окружение

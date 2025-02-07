@@ -5,8 +5,8 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/tg-diver_test_bot
-ExecStart=/opt/tg-diver_test_bot/startBot.sh
+WorkingDirectory=/opt/tgBot-EDT
+ExecStart=/opt/tgBot-EDT/startBot.sh
 RestartSec=60
 Restart=always
 
