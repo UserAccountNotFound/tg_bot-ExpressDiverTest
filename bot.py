@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-# Загружаем переменные окружения из файла .env
+# переменные окружения из файла .env
 load_dotenv()
 
 # Инициализация базы данных
