@@ -3,9 +3,14 @@ import random
 import sqlite3
 import yaml
 from aiogram import Bot, Dispatcher, types
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
+#from aiogram.dispatcher import FSMContext
+from aiogram.fsm.context import FSMContext
+#from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils import executor
+#from aiogram.contrib.fsm_storage.memory import MemoryStorage  # Встроенное хранилище
+from aiogram.fsm.storage.memory import MemoryStorage # Встроенное хранилище
 from dotenv import load_dotenv
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -62,32 +67,32 @@ def generate_pdf(user_data):
 
 # Инициализация бота и диспетчера
 bot = Bot(token=os.getenv("TELEGRAM_BOT_TOKEN"))
-dp = Dispatcher(bot)
-dp.middleware.setup(LoggingMiddleware())
+storage = MemoryStorage()  # Встроенное хранилище состояний
+dp = Dispatcher(bot, storage=storage)
 
 # Состояния для FSM (Finite State Machine)
-class TestStates:
-    NAME = "name"
-    SURNAME = "surname"
-    COURSE = "course"
-    TEST = "test"
+class TestStates(StatesGroup):
+    NAME = State()
+    SURNAME = State()
+    COURSE = State()
+    TEST = State()
 
 # Обработчик команды /start
-@dp.message_handler(commands=['start'])
+@dp.message_handler(commands=['start'], state="*")
 async def start(message: types.Message):
-    await message.answer("Привет! Введите ваше имя:")
     await TestStates.NAME.set()
+    await message.answer("Привет! Введите ваше имя:")
 
 # Обработчик ввода имени
 @dp.message_handler(state=TestStates.NAME)
-async def get_name(message: types.Message, state):
+async def get_name(message: types.Message, state: FSMContext):
     await state.update_data(first_name=message.text)
-    await message.answer("Введите вашу фамилию:")
     await TestStates.SURNAME.set()
+    await message.answer("Введите вашу фамилию:")
 
 # Обработчик ввода фамилии
 @dp.message_handler(state=TestStates.SURNAME)
-async def get_surname(message: types.Message, state):
+async def get_surname(message: types.Message, state: FSMContext):
     await state.update_data(last_name=message.text)
     reply_keyboard = ReplyKeyboardMarkup(
         keyboard=[
@@ -96,19 +101,19 @@ async def get_surname(message: types.Message, state):
         resize_keyboard=True,
         one_time_keyboard=True
     )
-    await message.answer("Выберите курс:", reply_markup=reply_keyboard)
     await TestStates.COURSE.set()
+    await message.answer("Выберите курс:", reply_markup=reply_keyboard)
 
 # Обработчик выбора курса
 @dp.message_handler(state=TestStates.COURSE)
-async def choose_course(message: types.Message, state):
+async def choose_course(message: types.Message, state: FSMContext):
     course = message.text
     questions = load_questions(course)
     await state.update_data(course=course, questions=questions, current_question=0, score=0)
     await ask_question(message, state)
 
 # Задать вопрос
-async def ask_question(message: types.Message, state):
+async def ask_question(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     question_data = user_data['questions'][user_data['current_question']]
     question = question_data['question']
@@ -127,7 +132,7 @@ async def ask_question(message: types.Message, state):
 
 # Проверка ответа
 @dp.message_handler(state=TestStates.TEST)
-async def check_answer(message: types.Message, state):
+async def check_answer(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     question_data = user_data['questions'][user_data['current_question']]
     correct_answer = str(question_data['answer'])
