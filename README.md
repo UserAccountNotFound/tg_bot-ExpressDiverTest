@@ -31,11 +31,11 @@ pip install -r requirements.txt
 
 * создаем .env файл и копируем в него токен и ID группы доступа
 ``` bash
-echo "TELEGRAM_BOT_TOKEN=*токен_телеграм_бота*" > .env
+echo "TELEGRAM_BOT_TOKEN=*токен_телеграм_бота*" >> .env
 ```
 * GROUP_ID всегда отрицательное число!!!!!!
 ``` bash
-echo "GROUP_ID=*ID_группы_пользователей*" > .env
+echo "GROUP_ID=*ID_группы_пользователей*" >> .env
 ```
 
 
