@@ -1,2 +1,3 @@
-# tg_bot-ExpressDiverTest
+# Telegram Bot - ExpressDiverTest
+![Python Version](https://img.shields.io/badge/python-3.11.2-blue.svg)
 Попытка реализации единой точки входа в программы тестирования по курсам OWD и AOWD с последующей возможностью просмотра исторических данных, а также попытка шаблонизировать вывод результатов тестирования
