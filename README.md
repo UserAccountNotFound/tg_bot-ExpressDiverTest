@@ -9,7 +9,7 @@
 
 * клонируем нужную ветку и переходим в нее
 ``` bash
-git clone --single-branch -b dev t https://github.com/UserAccountNotFound/tg_bot-diver-test.git /opt/tgBot-EDT && cd /opt/tgBot-EDT
+git clone --single-branch -b dev https://github.com/UserAccountNotFound/tg_bot-ExpressDiverTest.git /opt/tgBot-EDT && cd /opt/tgBot-EDT
 ```
 
 * создаем виртуальное окружение
